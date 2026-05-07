@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>College Management System</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --muted: #94a3b8;
+      --text: #e2e8f0;
+      --accent: #22c55e;
+      --danger: #ef4444;
+      --border: #1f2937;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(140deg, #0f172a 0%, #1e293b 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    h1 { margin: 0; font-size: 1.8rem; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    .metric {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .muted { color: var(--muted); font-size: .9rem; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+    form {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    label { font-size: .9rem; color: var(--muted); }
+
+    input, select {
+      width: 100%;
+      background: #0b1220;
+      color: var(--text);
+      border: 1px solid #233046;
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    button {
+      border: none;
+      background: var(--accent);
+      color: #052e16;
+      border-radius: 8px;
+      font-weight: 700;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    button:hover { filter: brightness(1.06); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: .92rem;
+    }
+
+    th, td {
+      border-bottom: 1px solid #233046;
+      padding: 9px 6px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { color: #cbd5e1; }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 700;
+      background: rgba(34, 197, 94, 0.22);
+      color: #86efac;
+    }
+
+    .danger { color: #fca5a5; }
+    .ok { color: #86efac; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <div class="header">
+      <h1>🎓 College Management System</h1>
+      <span class="muted">Demo dashboard (in-browser, no backend)</span>
+    </div>
+
+    <section class="grid" id="metrics"></section>
+
+    <section class="layout">
+      <article class="card">
+        <h2>Register Student</h2>
+        <p class="muted">Add a student with department and fee details.</p>
+        <form id="studentForm">
+          <div>
+            <label for="studentName">Student Name</label>
+            <input id="studentName" required placeholder="e.g., Asha Kumar" />
+          </div>
+          <div>
+            <label for="studentDept">Department</label>
+            <select id="studentDept" required>
+              <option value="">Select Department</option>
+              <option>Computer Science</option>
+              <option>Mechanical</option>
+              <option>Electronics</option>
+              <option>Commerce</option>
+            </select>
+          </div>
+          <div>
+            <label for="feeStatus">Fee Status</label>
+            <select id="feeStatus" required>
+              <option>Paid</option>
+              <option>Pending</option>
+            </select>
+          </div>
+          <button type="submit">Add Student</button>
+        </form>
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Department</th><th>Fee</th></tr>
+          </thead>
+          <tbody id="studentRows"></tbody>
+        </table>
+      </article>
+
+      <article class="card">
+        <h2>Manage Courses</h2>
+        <p class="muted">Create course and assign faculty.</p>
+        <form id="courseForm">
+          <div>
+            <label for="courseName">Course Name</label>
+            <input id="courseName" required placeholder="e.g., Data Structures" />
+          </div>
+          <div>
+            <label for="facultyName">Faculty Name</label>
+            <input id="facultyName" required placeholder="e.g., Dr. Smith" />
+          </div>
+          <div>
+            <label for="seats">Available Seats</label>
+            <input id="seats" type="number" min="1" required value="60" />
+          </div>
+          <button type="submit">Add Course</button>
+        </form>
+        <table>
+          <thead>
+            <tr><th>Course</th><th>Faculty</th><th>Seats</th></tr>
+          </thead>
+          <tbody id="courseRows"></tbody>
+        </table>
+      </article>
+
+      <article class="card">
+        <h2>Attendance Tracker</h2>
+        <p class="muted">Mark monthly attendance per student.</p>
+        <form id="attendanceForm">
+          <div>
+            <label for="attStudent">Student</label>
+            <input id="attStudent" required placeholder="e.g., Rahul" />
+          </div>
+          <div>
+            <label for="attPercent">Attendance (%)</label>
+            <input id="attPercent" type="number" min="0" max="100" required value="80" />
+          </div>
+          <button type="submit">Add Attendance</button>
+        </form>
+        <table>
+          <thead>
+            <tr><th>Student</th><th>Attendance</th><th>Status</th></tr>
+          </thead>
+          <tbody id="attendanceRows"></tbody>
+        </table>
+      </article>
+
+      <article class="card">
+        <h2>Quick Overview</h2>
+        <p class="muted">Live indicators from registered records.</p>
+        <table>
+          <tbody>
+            <tr><th>Total Students</th><td id="ovStudents">0</td></tr>
+            <tr><th>Pending Fees</th><td id="ovPending">0</td></tr>
+            <tr><th>Total Courses</th><td id="ovCourses">0</td></tr>
+            <tr><th>Attendance Below 75%</th><td id="ovShort">0</td></tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const state = {
+      students: [
+        { name: 'Priya Nair', dept: 'Computer Science', fee: 'Paid' },
+        { name: 'Arjun Das', dept: 'Mechanical', fee: 'Pending' }
+      ],
+      courses: [
+        { name: 'Data Structures', faculty: 'Dr. Elena', seats: 60 },
+        { name: 'Thermodynamics', faculty: 'Dr. Khan', seats: 45 }
+      ],
+      attendance: [
+        { name: 'Priya Nair', percent: 91 },
+        { name: 'Arjun Das', percent: 68 }
+      ]
+    };
+
+    const el = (id) => document.getElementById(id);
+
+    function renderMetrics() {
+      const pendingFees = state.students.filter(s => s.fee === 'Pending').length;
+      const shortAttendance = state.attendance.filter(a => a.percent < 75).length;
+      const avgAttendance = state.attendance.length
+        ? Math.round(state.attendance.reduce((sum, a) => sum + a.percent, 0) / state.attendance.length)
+        : 0;
+
+      el('metrics').innerHTML = `
+        <div class="card"><div class="muted">Students</div><div class="metric">${state.students.length}</div></div>
+        <div class="card"><div class="muted">Courses</div><div class="metric">${state.courses.length}</div></div>
+        <div class="card"><div class="muted">Pending Fees</div><div class="metric danger">${pendingFees}</div></div>
+        <div class="card"><div class="muted">Avg. Attendance</div><div class="metric ok">${avgAttendance}%</div></div>
+      `;
+
+      el('ovStudents').textContent = state.students.length;
+      el('ovPending').textContent = pendingFees;
+      el('ovCourses').textContent = state.courses.length;
+      el('ovShort').textContent = shortAttendance;
+    }
+
+    function renderStudents() {
+      el('studentRows').innerHTML = state.students.map(s => `
+        <tr>
+          <td>${s.name}</td>
+          <td>${s.dept}</td>
+          <td><span class="badge">${s.fee}</span></td>
+        </tr>`).join('');
+    }
+
+    function renderCourses() {
+      el('courseRows').innerHTML = state.courses.map(c => `
+        <tr>
+          <td>${c.name}</td>
+          <td>${c.faculty}</td>
+          <td>${c.seats}</td>
+        </tr>`).join('');
+    }
+
+    function renderAttendance() {
+      el('attendanceRows').innerHTML = state.attendance.map(a => `
+        <tr>
+          <td>${a.name}</td>
+          <td>${a.percent}%</td>
+          <td class="${a.percent < 75 ? 'danger' : 'ok'}">${a.percent < 75 ? 'Shortage' : 'Good'}</td>
+        </tr>`).join('');
+    }
+
+    function refresh() {
+      renderMetrics();
+      renderStudents();
+      renderCourses();
+      renderAttendance();
+    }
+
+    el('studentForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      state.students.push({
+        name: el('studentName').value.trim(),
+        dept: el('studentDept').value,
+        fee: el('feeStatus').value
+      });
+      e.target.reset();
+      refresh();
+    });
+
+    el('courseForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      state.courses.push({
+        name: el('courseName').value.trim(),
+        faculty: el('facultyName').value.trim(),
+        seats: Number(el('seats').value)
+      });
+      e.target.reset();
+      el('seats').value = 60;
+      refresh();
+    });
+
+    el('attendanceForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      state.attendance.push({
+        name: el('attStudent').value.trim(),
+        percent: Number(el('attPercent').value)
+      });
+      e.target.reset();
+      el('attPercent').value = 80;
+      refresh();
+    });
+
+    refresh();
+  </script>
+</body>
+</html>
