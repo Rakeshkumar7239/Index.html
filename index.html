@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>College Management System</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>College Management System</h1>
+    <p>Manage students, courses, and enrollments in one place.</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Add Student</h2>
+      <form id="studentForm">
+        <input type="text" id="studentName" placeholder="Student Name" required />
+        <input type="email" id="studentEmail" placeholder="Student Email" required />
+        <button type="submit">Add Student</button>
+      </form>
+      <ul id="studentList" class="list"></ul>
+    </section>
+
+    <section class="card">
+      <h2>Add Course</h2>
+      <form id="courseForm">
+        <input type="text" id="courseName" placeholder="Course Name" required />
+        <input type="text" id="courseCode" placeholder="Course Code" required />
+        <button type="submit">Add Course</button>
+      </form>
+      <ul id="courseList" class="list"></ul>
+    </section>
+
+    <section class="card">
+      <h2>Enroll Student</h2>
+      <form id="enrollForm">
+        <select id="studentSelect" required></select>
+        <select id="courseSelect" required></select>
+        <button type="submit">Enroll</button>
+      </form>
+      <ul id="enrollmentList" class="list"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <button id="clearData" class="danger">Clear All Data</button>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
